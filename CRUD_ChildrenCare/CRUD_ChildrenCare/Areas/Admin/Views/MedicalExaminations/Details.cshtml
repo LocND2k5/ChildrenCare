@@ -1,0 +1,146 @@
+@model MedicalExaminationDetailsViewModel
+@{
+    ViewData["Title"] = $"Medical Examination #{Model.Examination.Id}";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1">
+                <li class="breadcrumb-item"><a asp-action="Index">Medical Examinations</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Examination #@Model.Examination.Id</li>
+            </ol>
+        </nav>
+        <h2 class="mb-0">Examination & Prescription Details #@Model.Examination.Id</h2>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-controller="AdminReservation" asp-action="Details" asp-route-id="@Model.Examination.ReservationId" class="btn btn-outline-primary">
+            View Booking #@Model.Examination.ReservationId
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Patient Info -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm p-4 rounded-3 h-100">
+            <h5 class="fw-bold border-bottom pb-3 mb-3">Patient & Booking Information</h5>
+            <table class="table table-sm table-borderless">
+                <tr>
+                    <th class="text-muted w-40">Patient Name:</th>
+                    <td class="fw-bold">@Model.Examination.Reservation?.ReceiverFullName</td>
+                </tr>
+                <tr>
+                    <th class="text-muted">Gender:</th>
+                    <td>@Model.Examination.Reservation?.ReceiverGender</td>
+                </tr>
+                <tr>
+                    <th class="text-muted">Contact Phone:</th>
+                    <td>@Model.Examination.Reservation?.ReceiverMobile</td>
+                </tr>
+                <tr>
+                    <th class="text-muted">Email:</th>
+                    <td>@Model.Examination.Reservation?.ReceiverEmail</td>
+                </tr>
+                <tr>
+                    <th class="text-muted">Services Used:</th>
+                    <td>
+                        @if (Model.Examination.Reservation?.ReservationItems != null)
+                        {
+                            @foreach (var ri in Model.Examination.Reservation?.ReservationItems!)
+                            {
+                                <span class="badge bg-light text-primary border me-1">@ri.Service?.Title</span>
+                            }
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Examination Info -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm p-4 rounded-3 h-100">
+            <h5 class="fw-bold border-bottom pb-3 mb-3">Examination Overview</h5>
+            <table class="table table-sm table-borderless">
+                <tr>
+                    <th class="text-muted w-40">Attending Doctor:</th>
+                    <td class="fw-bold text-primary">@(Model.Examination.Doctor?.FullName ?? "Doctor")</td>
+                </tr>
+                <tr>
+                    <th class="text-muted">Examination Date:</th>
+                    <td class="fw-bold">@Model.Examination.ExaminationDate.ToString("dd/MM/yyyy HH:mm")</td>
+                </tr>
+                <tr>
+                    <th class="text-muted">Booking Status:</th>
+                    <td>
+                        <span class="badge bg-success">@Model.Examination.Reservation?.Status</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-muted">Record Created:</th>
+                    <td>@Model.Examination.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
+                </tr>
+            </table>
+            <div class="alert alert-light border small text-muted mb-0 mt-auto">
+                <i class="bi bi-info-circle me-1"></i> Medical examination records and prescriptions are permanent health history records and cannot be altered or removed.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Prescription section -->
+@foreach (var rx in Model.Examination.Prescriptions)
+{
+    <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold mb-0">Prescription Details (Đơn thuốc)</h5>
+            <span class="text-muted small">Prescribed on @rx.CreatedDate.ToString("dd/MM/yyyy")</span>
+        </div>
+        <div class="card-body p-4">
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label text-muted text-uppercase small fw-bold">Clinical Diagnosis (Chẩn đoán)</label>
+                    <div class="p-3 bg-light rounded-3 fw-semibold text-danger">
+                        @rx.Diagnosis
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label text-muted text-uppercase small fw-bold">Doctor Notes & Advice (Lời dặn bác sĩ)</label>
+                    <div class="p-3 bg-light rounded-3 text-secondary">
+                        @(string.IsNullOrWhiteSpace(rx.Note) ? "Không có lời dặn thêm." : rx.Note)
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="fw-bold text-uppercase small text-muted mb-3">Prescribed Medications</h6>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>Medicine Name</th>
+                            <th>Dosage</th>
+                            <th style="width: 100px;">Quantity</th>
+                            <th>Usage / Instructions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int idx = 1; }
+                        @foreach (var med in rx.PrescriptionItems)
+                        {
+                            <tr>
+                                <td class="text-center text-muted">@(idx++)</td>
+                                <td class="fw-bold text-primary">@med.MedicineName</td>
+                                <td>@med.Dosage</td>
+                                <td class="fw-bold text-center">@med.Quantity</td>
+                                <td>@(string.IsNullOrWhiteSpace(med.Usage) ? "-" : med.Usage)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

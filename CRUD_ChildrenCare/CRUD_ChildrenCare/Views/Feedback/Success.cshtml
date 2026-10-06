@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Thank you for your feedback";
+}
+
+<div class="container py-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm p-5 rounded-4">
+                <div class="display-3 text-success mb-3">✓</div>
+                <h2 class="fw-bold mb-3">Thank You!</h2>
+                <p class="text-muted mb-4">
+                    Your feedback has been submitted successfully. We appreciate your time and comments, which help us continually improve our pediatric care services.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a asp-controller="Feedback" asp-action="Index" class="btn btn-outline-primary">View Customer Reviews</a>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

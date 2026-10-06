@@ -1,0 +1,144 @@
+@model FeedbackDetailsAdminViewModel
+@{
+    ViewData["Title"] = $"Feedback #{Model.Feedback.Id} from {Model.Feedback.FullName}";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1">
+                <li class="breadcrumb-item"><a asp-action="Index">Feedbacks</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Feedback #@Model.Feedback.Id</li>
+            </ol>
+        </nav>
+        <h2 class="mb-0">Feedback Details #@Model.Feedback.Id</h2>
+    </div>
+    <div class="d-flex gap-2">
+        @if (Model.CanManage)
+        {
+            <form asp-action="ToggleStatus" asp-route-id="@Model.Feedback.Id" method="post" class="d-inline">
+                <button type="submit" class="btn @(Model.Feedback.Status == FeedbackStatus.Published ? "btn-warning" : "btn-success")">
+                    <i class="bi bi-eye@(Model.Feedback.Status == FeedbackStatus.Published ? "-slash" : "") me-1"></i>
+                    @(Model.Feedback.Status == FeedbackStatus.Published ? "Set to Hidden" : "Publish Feedback")
+                </button>
+            </form>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Feedback info -->
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm p-4 rounded-3 h-100">
+            <div class="d-flex justify-content-between align-items-start mb-3 border-bottom pb-3">
+                <div>
+                    <h5 class="fw-bold mb-1">Review Rating</h5>
+                    <div class="fs-4 text-warning">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= Model.Feedback.RatedStar)
+                            {
+                                <span>★</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted opacity-25">★</span>
+                            }
+                        }
+                        <span class="fs-6 text-dark fw-bold ms-2">(@Model.Feedback.RatedStar / 5 stars)</span>
+                    </div>
+                </div>
+                <div>
+                    <span class="badge @(Model.Feedback.Status == FeedbackStatus.Published ? "bg-success" : "bg-secondary") fs-6">
+                        @Model.Feedback.Status
+                    </span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h6 class="text-muted text-uppercase small fw-bold">Feedback Content</h6>
+                <div class="p-3 bg-light rounded-3 text-secondary lh-lg fs-6">
+                    @Model.Feedback.Content
+                </div>
+            </div>
+
+            @if (Model.Feedback.FeedbackImages.Any())
+            {
+                <div>
+                    <h6 class="text-muted text-uppercase small fw-bold mb-3">Attached Photos (@Model.Feedback.FeedbackImages.Count)</h6>
+                    <div class="row g-2">
+                        @foreach (var img in Model.Feedback.FeedbackImages)
+                        {
+                            <div class="col-md-3 col-6">
+                                <a href="@img.ImageUrl" target="_blank">
+                                    <img src="@img.ImageUrl" class="img-fluid rounded border shadow-sm w-100" style="height: 120px; object-fit: cover;" alt="Review photo" />
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Submitter & Service info -->
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm p-4 rounded-3 h-100">
+            <h5 class="fw-bold border-bottom pb-3 mb-3">Sender Details</h5>
+            <table class="table table-sm table-borderless">
+                <tr>
+                    <th class="text-muted w-40">Sender Name:</th>
+                    <td class="fw-semibold">@Model.Feedback.FullName</td>
+                </tr>
+                <tr>
+                    <th class="text-muted">Gender:</th>
+                    <td>@Model.Feedback.Gender</td>
+                </tr>
+                <tr>
+                    <th class="text-muted">Email:</th>
+                    <td>@Model.Feedback.Email</td>
+                </tr>
+                <tr>
+                    <th class="text-muted">Mobile:</th>
+                    <td>@Model.Feedback.Mobile</td>
+                </tr>
+                <tr>
+                    <th class="text-muted">Service Reviewed:</th>
+                    <td>
+                        @if (Model.Feedback.Service != null)
+                        {
+                            <a asp-controller="Services" asp-action="Details" asp-route-id="@Model.Feedback.Service.Id" class="badge bg-light text-primary border text-decoration-none">
+                                @Model.Feedback.Service.Title
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="badge bg-light text-secondary border">General Care</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-muted">Submitted At:</th>
+                    <td>@Model.Feedback.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                </tr>
+            </table>
+
+            @if (Model.CanManage)
+            {
+                <div class="mt-auto pt-3 border-top">
+                    <h6 class="fw-bold mb-2">Change Status</h6>
+                    <form asp-action="UpdateStatus" asp-route-id="@Model.Feedback.Id" method="post" class="d-flex gap-2">
+                        <select name="status" class="form-select form-select-sm">
+                            @foreach (var s in Enum.GetValues<FeedbackStatus>())
+                            {
+                                <option value="@s" selected="@(Model.Feedback.Status == s)">@s</option>
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+</div>

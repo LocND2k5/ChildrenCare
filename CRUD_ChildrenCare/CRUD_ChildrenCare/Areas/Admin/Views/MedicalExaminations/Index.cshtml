@@ -1,0 +1,151 @@
+@model MedicalExaminationListViewModel
+@{
+    ViewData["Title"] = "Medical Examinations";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h2 class="mb-1">Medical Examinations & Prescriptions</h2>
+        <p class="text-muted mb-0">Record and review pediatric checkup history, clinical diagnoses, and prescriptions.</p>
+    </div>
+    @if (Model.CanCreate)
+    {
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-clipboard2-plus me-1"></i> New Examination & Prescription
+        </a>
+    }
+</div>
+
+<!-- Filters -->
+<div class="card mb-4 shadow-sm border-0">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <input type="text" name="search" class="form-control" placeholder="Search patient, booking #..." value="@Model.SearchQuery" />
+            </div>
+            <div class="col-md-3">
+                <select name="serviceId" class="form-select">
+                    <option value="">All Services</option>
+                    @foreach (var s in Model.Services)
+                    {
+                        <option value="@s.Id" selected="@(Model.ServiceId == s.Id)">@s.Title</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="text" name="medicineName" class="form-control" placeholder="Medicine name..." value="@Model.MedicineName" />
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="fromDate" class="form-control" value="@(Model.FromDate?.ToString("yyyy-MM-dd"))" title="From Examination Date" />
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-secondary flex-fill">Filter</button>
+                @if (!string.IsNullOrWhiteSpace(Model.SearchQuery) || Model.ServiceId.HasValue || !string.IsNullOrWhiteSpace(Model.MedicineName) || Model.FromDate.HasValue)
+                {
+                    <a asp-action="Index" class="btn btn-outline-secondary">Reset</a>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Table -->
+<div class="table-responsive bg-white rounded shadow-sm">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Booking #</th>
+                <th>Examination Date</th>
+                <th>Patient Name</th>
+                <th>Attending Doctor</th>
+                <th>Diagnosis Summary</th>
+                <th>Prescribed Medicines</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Examinations.Any())
+            {
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-muted">No medical examination records found.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model.Examinations)
+                {
+                    var rx = item.Prescriptions.FirstOrDefault();
+                    var itemCount = rx?.PrescriptionItems.Count ?? 0;
+                    <tr>
+                        <td class="text-muted">@item.Id</td>
+                        <td>
+                            <a asp-controller="AdminReservation" asp-action="Details" asp-route-id="@item.ReservationId" class="badge bg-light text-primary border text-decoration-none">
+                                #@item.ReservationId
+                            </a>
+                        </td>
+                        <td class="fw-semibold">@item.ExaminationDate.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@item.Reservation?.ReceiverFullName</td>
+                        <td>
+                            <span class="badge bg-secondary">@(item.Doctor?.FullName ?? "Doctor")</span>
+                        </td>
+                        <td>
+                            <span class="text-truncate d-inline-block" style="max-width: 250px;" title="@(rx?.Diagnosis ?? "")">
+                                @(rx?.Diagnosis ?? "No diagnosis")
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-info-subtle text-info border">@itemCount medicine(s)</span>
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+@if (Model.TotalPages > 1)
+{
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="text-muted small">
+            Showing page @Model.PageIndex of @Model.TotalPages (@Model.TotalItems total records)
+        </div>
+        <nav aria-label="Examination pagination">
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item @(!Model.HasPreviousPage ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-page="@(Model.PageIndex - 1)"
+                       asp-route-search="@Model.SearchQuery"
+                       asp-route-serviceId="@Model.ServiceId"
+                       asp-route-medicineName="@Model.MedicineName"
+                       asp-route-fromDate="@(Model.FromDate?.ToString("yyyy-MM-dd"))">Previous</a>
+                </li>
+                @for (int p = 1; p <= Model.TotalPages; p++)
+                {
+                    <li class="page-item @(p == Model.PageIndex ? "active" : "")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-page="@p"
+                           asp-route-search="@Model.SearchQuery"
+                           asp-route-serviceId="@Model.ServiceId"
+                           asp-route-medicineName="@Model.MedicineName"
+                           asp-route-fromDate="@(Model.FromDate?.ToString("yyyy-MM-dd"))">@p</a>
+                    </li>
+                }
+                <li class="page-item @(!Model.HasNextPage ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-page="@(Model.PageIndex + 1)"
+                       asp-route-search="@Model.SearchQuery"
+                       asp-route-serviceId="@Model.ServiceId"
+                       asp-route-medicineName="@Model.MedicineName"
+                       asp-route-fromDate="@(Model.FromDate?.ToString("yyyy-MM-dd"))">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+}

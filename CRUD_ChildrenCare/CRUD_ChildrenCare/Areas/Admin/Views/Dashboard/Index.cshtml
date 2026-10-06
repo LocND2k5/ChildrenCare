@@ -1,0 +1,291 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = Model.IsManagerView ? "Reservation Dashboard" : "Admin Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h2 class="mb-1">@(Model.IsManagerView ? "Reservation Dashboard" : "System Analytics & Operational Dashboard")</h2>
+        <p class="text-muted mb-0">Overview of reservations, healthcare revenue, customer acquisition, and satisfaction ratings.</p>
+    </div>
+
+    <!-- Date Range Filter Form -->
+    <form method="get" class="d-flex gap-2 align-items-center flex-wrap">
+        <div class="d-flex align-items-center gap-1">
+            <label class="form-label mb-0 small text-muted">From:</label>
+            <input type="date" name="fromDate" class="form-control form-control-sm" value="@Model.FromDate.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="d-flex align-items-center gap-1">
+            <label class="form-label mb-0 small text-muted">To:</label>
+            <input type="date" name="toDate" class="form-control form-control-sm" value="@Model.ToDate.ToString("yyyy-MM-dd")" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm px-3">Filter</button>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Reset</a>
+    </form>
+</div>
+
+<!-- KPI Cards -->
+<div class="row g-3 mb-4">
+    <!-- Success Reservations -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm p-3 h-100 border-start border-4 border-success">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted small text-uppercase fw-semibold">Success Bookings</span>
+                <span class="badge bg-success-subtle text-success">Completed</span>
+            </div>
+            <div class="d-flex align-items-baseline gap-2">
+                <h3 class="fw-bold mb-0 text-success">@Model.SuccessReservations</h3>
+                <small class="text-muted">/ @Model.TotalReservations total</small>
+            </div>
+            <div class="mt-2 text-muted small">
+                Submitted: <strong class="text-warning">@Model.SubmittedReservations</strong> | Cancelled: <strong class="text-danger">@Model.CancelledReservations</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Revenue -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm p-3 h-100 border-start border-4 border-primary">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted small text-uppercase fw-semibold">Total Revenue</span>
+                <span class="badge bg-primary-subtle text-primary">VND</span>
+            </div>
+            <h3 class="fw-bold mb-0 text-primary">@Model.TotalRevenue.ToString("N0") <small class="fs-6">đ</small></h3>
+            <div class="mt-2 text-muted small">
+                From completed pediatric services
+            </div>
+        </div>
+    </div>
+
+    <!-- Customers & Users -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm p-3 h-100 border-start border-4 border-info">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted small text-uppercase fw-semibold">Customer Base</span>
+                <span class="badge bg-info-subtle text-info">Contacts</span>
+            </div>
+            <div class="d-flex align-items-baseline gap-2">
+                <h3 class="fw-bold mb-0 text-dark">@Model.TotalContacts</h3>
+                <small class="text-muted">(+@Model.NewUsersCount new accounts)</small>
+            </div>
+            <div class="mt-2 text-muted small">
+                Customers: <strong class="text-success">@Model.CustomerCount</strong> | Potential: <strong class="text-warning">@Model.PotentialCount</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Average Feedback Rating -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm p-3 h-100 border-start border-4 border-warning">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted small text-uppercase fw-semibold">Feedback Rating</span>
+                <span class="badge bg-warning-subtle text-warning">Reviews</span>
+            </div>
+            <div class="d-flex align-items-baseline gap-2">
+                <h3 class="fw-bold mb-0 text-warning">@Model.AverageRating ★</h3>
+                <small class="text-muted">(@Model.TotalFeedbacks reviews)</small>
+            </div>
+            <div class="mt-2 text-muted small">
+                Active in public reviews catalog
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trend Chart & Status Distribution -->
+<div class="row g-4 mb-4">
+    <!-- Trend Chart -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm p-4 rounded-3 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">Daily Booking Trend (Success vs Total)</h5>
+                <span class="badge bg-light text-muted border">@Model.FromDate.ToString("dd/MM") - @Model.ToDate.ToString("dd/MM")</span>
+            </div>
+            <div style="height: 300px; position: relative;">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reservation Status Distribution -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm p-4 rounded-3 h-100">
+            <h5 class="fw-bold mb-3">Reservation Status Distribution</h5>
+            <div style="height: 220px; position: relative;">
+                <canvas id="statusPieChart"></canvas>
+            </div>
+            <div class="mt-3 pt-3 border-top d-flex justify-content-between text-center">
+                <div>
+                    <span class="badge bg-success d-block mb-1">@Model.SuccessReservations</span>
+                    <small class="text-muted">Success</small>
+                </div>
+                <div>
+                    <span class="badge bg-warning text-dark d-block mb-1">@Model.SubmittedReservations</span>
+                    <small class="text-muted">Submitted</small>
+                </div>
+                <div>
+                    <span class="badge bg-danger d-block mb-1">@Model.CancelledReservations</span>
+                    <small class="text-muted">Cancelled</small>
+                </div>
+                <div>
+                    <span class="badge bg-secondary d-block mb-1">@Model.CartReservations</span>
+                    <small class="text-muted">In Cart</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Revenue by Category & Feedback by Service -->
+<div class="row g-4 mb-4">
+    <!-- Revenue By Service Category -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm p-4 rounded-3 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">Revenue by Service Category</h5>
+                <span class="badge bg-primary-subtle text-primary">Completed Bookings</span>
+            </div>
+            @if (!Model.RevenueByCategory.Any())
+            {
+                <div class="text-center py-4 text-muted">
+                    No completed bookings in this date range.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Category</th>
+                                <th class="text-center">Bookings</th>
+                                <th class="text-end">Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cat in Model.RevenueByCategory)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@cat.CategoryName</td>
+                                    <td class="text-center">@cat.ReservationCount</td>
+                                    <td class="text-end fw-bold text-primary">@cat.Revenue.ToString("N0") VND</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Rating by Service -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm p-4 rounded-3 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">Customer Rating by Service</h5>
+                <span class="badge bg-warning-subtle text-warning">Average Stars</span>
+            </div>
+            @if (!Model.RatingByService.Any())
+            {
+                <div class="text-center py-4 text-muted">
+                    No published feedback reviews yet.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Service</th>
+                                <th class="text-center">Reviews</th>
+                                <th class="text-end">Avg Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in Model.RatingByService)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@r.ServiceName</td>
+                                    <td class="text-center">@r.FeedbackCount</td>
+                                    <td class="text-end">
+                                        <span class="text-warning fw-bold">@r.AverageRating ★</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Chart.js CDN for interactive visual analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Trend Chart
+            const trendCtx = document.getElementById('trendChart').getContext('2d');
+            const dates = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DailyTrends.Select(t => t.Date)));
+            const totalData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DailyTrends.Select(t => t.TotalCount)));
+            const successData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DailyTrends.Select(t => t.SuccessCount)));
+
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [
+                        {
+                            label: 'Total Bookings',
+                            data: totalData,
+                            borderColor: '#0d6efd',
+                            backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Success Bookings',
+                            data: successData,
+                            borderColor: '#198754',
+                            backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision: 0 }
+                        }
+                    }
+                }
+            });
+
+            // Status Distribution Pie Chart
+            const statusCtx = document.getElementById('statusPieChart').getContext('2d');
+            new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Success', 'Submitted', 'Cancelled', 'Cart'],
+                    datasets: [{
+                        data: [@Model.SuccessReservations, @Model.SubmittedReservations, @Model.CancelledReservations, @Model.CartReservations],
+                        backgroundColor: ['#198754', '#ffc107', '#dc3545', '#6c757d']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        });
+    </script>
+}

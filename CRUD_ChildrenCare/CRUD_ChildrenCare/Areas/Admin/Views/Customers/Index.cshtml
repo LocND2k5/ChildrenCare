@@ -1,0 +1,163 @@
+@model CustomerListViewModel
+@{
+    ViewData["Title"] = "Customer Management";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h2 class="mb-1">Customer Management</h2>
+        <p class="text-muted mb-0">Track and manage customer contacts, lead statuses, and update history.</p>
+    </div>
+    @if (Model.CanManage)
+    {
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-person-plus me-1"></i> Add New Customer
+        </a>
+    }
+</div>
+
+<!-- Filters & Search -->
+<div class="card mb-4 shadow-sm border-0">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <input type="text" name="search" class="form-control" placeholder="Search full name, email, mobile..." value="@Model.SearchQuery" />
+            </div>
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">All Statuses</option>
+                    @foreach (var s in Enum.GetValues<ContactStatus>())
+                    {
+                        <option value="@s" selected="@(Model.Status == s)">@s</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="sort" class="form-select">
+                    <option value="">Sort by...</option>
+                    <option value="FullName" selected="@(Model.Sort == "FullName")">Name (A-Z)</option>
+                    <option value="FullNameDesc" selected="@(Model.Sort == "FullNameDesc")">Name (Z-A)</option>
+                    <option value="Email" selected="@(Model.Sort == "Email")">Email</option>
+                    <option value="Mobile" selected="@(Model.Sort == "Mobile")">Mobile</option>
+                    <option value="Status" selected="@(Model.Sort == "Status")">Status</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-secondary flex-fill">Filter</button>
+                @if (!string.IsNullOrWhiteSpace(Model.SearchQuery) || Model.Status.HasValue || !string.IsNullOrWhiteSpace(Model.Sort))
+                {
+                    <a asp-action="Index" class="btn btn-outline-secondary">Reset</a>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Customer Table -->
+<div class="table-responsive bg-white rounded shadow-sm">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Full Name</th>
+                <th>Gender</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Customers.Any())
+            {
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-muted">No customers found.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model.Customers)
+                {
+                    <tr>
+                        <td class="text-muted">@item.Id</td>
+                        <td class="fw-semibold">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none">
+                                @item.FullName
+                            </a>
+                        </td>
+                        <td>@item.Gender</td>
+                        <td>@item.Email</td>
+                        <td>@item.Mobile</td>
+                        <td>
+                            @if (item.Status == ContactStatus.Customer)
+                            {
+                                <span class="badge bg-success">Customer</span>
+                            }
+                            else if (item.Status == ContactStatus.Potential)
+                            {
+                                <span class="badge bg-warning text-dark">Potential</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-info text-dark">Contact</span>
+                            }
+                        </td>
+                        <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+                        <td class="text-end">
+                            <div class="btn-group btn-group-sm">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary" title="Details">
+                                    View
+                                </a>
+                                @if (Model.CanManage)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-secondary" title="Edit">
+                                        Edit
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+@if (Model.TotalPages > 1)
+{
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="text-muted small">
+            Showing page @Model.PageIndex of @Model.TotalPages (@Model.TotalItems total records)
+        </div>
+        <nav aria-label="Customer pagination">
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item @(!Model.HasPreviousPage ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-page="@(Model.PageIndex - 1)"
+                       asp-route-search="@Model.SearchQuery"
+                       asp-route-status="@Model.Status"
+                       asp-route-sort="@Model.Sort">Previous</a>
+                </li>
+                @for (int p = 1; p <= Model.TotalPages; p++)
+                {
+                    <li class="page-item @(p == Model.PageIndex ? "active" : "")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-page="@p"
+                           asp-route-search="@Model.SearchQuery"
+                           asp-route-status="@Model.Status"
+                           asp-route-sort="@Model.Sort">@p</a>
+                    </li>
+                }
+                <li class="page-item @(!Model.HasNextPage ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-page="@(Model.PageIndex + 1)"
+                       asp-route-search="@Model.SearchQuery"
+                       asp-route-status="@Model.Status"
+                       asp-route-sort="@Model.Sort">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+}

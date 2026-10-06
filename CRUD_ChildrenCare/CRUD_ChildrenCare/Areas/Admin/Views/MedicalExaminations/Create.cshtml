@@ -1,0 +1,181 @@
+@model CreateMedicalExaminationViewModel
+@{
+    ViewData["Title"] = "New Examination & Prescription";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item"><a asp-action="Index">Medical Examinations</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create</li>
+                    </ol>
+                </nav>
+                <h2 class="mb-0">Create Examination & Prescription</h2>
+                <p class="text-muted mb-0">Record clinical diagnosis, doctor notes, and prescribe medicine for patient.</p>
+            </div>
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+
+        <form asp-action="Create" method="post" id="examForm">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <!-- Booking and Doctor section -->
+            <div class="card border-0 shadow-sm p-4 rounded-3 mb-4">
+                <h5 class="fw-bold border-bottom pb-3 mb-3">1. Checkup Overview</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="ReservationId" class="form-label fw-semibold">Patient Booking <span class="text-danger">*</span></label>
+                        <select asp-for="ReservationId" class="form-select">
+                            <option value="">-- Select Patient Reservation --</option>
+                            @foreach (var r in Model.EligibleReservations)
+                            {
+                                var serviceName = r.ReservationItems.FirstOrDefault()?.Service?.Title ?? "Service";
+                                <option value="@r.Id" selected="@(Model.ReservationId == r.Id)">
+                                    #@r.Id - @r.ReceiverFullName (@r.ReceiverMobile) - @serviceName (@r.CheckupTime.ToString("dd/MM/yyyy HH:mm"))
+                                </option>
+                            }
+                        </select>
+                        <span asp-validation-for="ReservationId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label asp-for="ExaminationDate" class="form-label fw-semibold">Examination Date & Time <span class="text-danger">*</span></label>
+                        <input asp-for="ExaminationDate" type="datetime-local" class="form-control"
+                               value="@Model.ExaminationDate.ToString("yyyy-MM-ddTHH:mm")" />
+                        <span asp-validation-for="ExaminationDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Attending Doctor</label>
+                        <input type="text" class="form-control bg-light" value="@Model.DoctorName" readonly disabled />
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="Diagnosis" class="form-label fw-semibold">Clinical Diagnosis (Chẩn đoán bệnh) <span class="text-danger">*</span></label>
+                        <textarea asp-for="Diagnosis" class="form-control" rows="2" placeholder="e.g. Viêm đường hô hấp trên thể nhẹ, họng đỏ, không khò khè..."></textarea>
+                        <span asp-validation-for="Diagnosis" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="Note" class="form-label fw-semibold">Doctor Notes & Advice (Lời dặn bác sĩ)</label>
+                        <textarea asp-for="Note" class="form-control" rows="2" placeholder="e.g. Uống nhiều nước, giữ ấm cổ, tái khám nếu sốt cao liên tục trên 38.5 độ..."></textarea>
+                        <span asp-validation-for="Note" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prescribed Medications Section -->
+            <div class="card border-0 shadow-sm p-4 rounded-3 mb-4">
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+                    <div>
+                        <h5 class="fw-bold mb-0">2. Prescription Medications (Đơn thuốc)</h5>
+                        <small class="text-muted">At least 1 medication is required.</small>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="btnAddMedicine">
+                        <i class="bi bi-plus-lg me-1"></i> Add Medication
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle" id="medicineTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 25%;">Medicine Name <span class="text-danger">*</span></th>
+                                <th style="width: 20%;">Dosage <span class="text-danger">*</span></th>
+                                <th style="width: 15%;">Quantity <span class="text-danger">*</span></th>
+                                <th style="width: 30%;">Usage / Instructions</th>
+                                <th style="width: 10%;" class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="medicineTableBody">
+                            @for (int i = 0; i < Model.Items.Count; i++)
+                            {
+                                <tr class="med-row">
+                                    <td>
+                                        <input type="text" name="Items[@i].MedicineName" class="form-control form-control-sm" value="@Model.Items[i].MedicineName" placeholder="e.g. Paracetamol 250mg" required />
+                                    </td>
+                                    <td>
+                                        <input type="text" name="Items[@i].Dosage" class="form-control form-control-sm" value="@Model.Items[i].Dosage" placeholder="e.g. 1 gói/lần" required />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="Items[@i].Quantity" class="form-control form-control-sm" value="@Model.Items[i].Quantity" min="1" required />
+                                    </td>
+                                    <td>
+                                        <input type="text" name="Items[@i].Usage" class="form-control form-control-sm" value="@Model.Items[i].Usage" placeholder="e.g. Uống sau ăn sáng, tối" />
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-outline-danger btn-sm btn-remove-row" title="Remove">✕</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mb-5">
+                <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
+                <button type="submit" class="btn btn-primary px-5 btn-lg">Complete Checkup & Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tbody = document.getElementById('medicineTableBody');
+            const btnAdd = document.getElementById('btnAddMedicine');
+
+            function updateRowIndices() {
+                const rows = tbody.querySelectorAll('.med-row');
+                rows.forEach((row, index) => {
+                    row.querySelector('input[name$=".MedicineName"]').name = `Items[${index}].MedicineName`;
+                    row.querySelector('input[name$=".Dosage"]').name = `Items[${index}].Dosage`;
+                    row.querySelector('input[name$=".Quantity"]').name = `Items[${index}].Quantity`;
+                    row.querySelector('input[name$=".Usage"]').name = `Items[${index}].Usage`;
+                });
+            }
+
+            btnAdd.addEventListener('click', function () {
+                const index = tbody.querySelectorAll('.med-row').length;
+                const tr = document.createElement('tr');
+                tr.className = 'med-row';
+                tr.innerHTML = `
+                    <td>
+                        <input type="text" name="Items[${index}].MedicineName" class="form-control form-control-sm" placeholder="e.g. Hapacol 150mg" required />
+                    </td>
+                    <td>
+                        <input type="text" name="Items[${index}].Dosage" class="form-control form-control-sm" placeholder="e.g. 1 gói/lần" required />
+                    </td>
+                    <td>
+                        <input type="number" name="Items[${index}].Quantity" class="form-control form-control-sm" value="1" min="1" required />
+                    </td>
+                    <td>
+                        <input type="text" name="Items[${index}].Usage" class="form-control form-control-sm" placeholder="e.g. Uống khi sốt" />
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-outline-danger btn-sm btn-remove-row" title="Remove">✕</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            tbody.addEventListener('click', function (e) {
+                if (e.target.classList.contains('btn-remove-row')) {
+                    const rows = tbody.querySelectorAll('.med-row');
+                    if (rows.length <= 1) {
+                        alert('Đơn thuốc phải có ít nhất 1 dòng thuốc.');
+                        return;
+                    }
+                    e.target.closest('tr').remove();
+                    updateRowIndices();
+                }
+            });
+        });
+    </script>
+}

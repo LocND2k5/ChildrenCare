@@ -1,0 +1,120 @@
+@model CRUD_ChildrenCare.ViewModels.Feedback.CreateFeedbackViewModel
+@{
+    ViewData["Title"] = "Send Feedback";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fs-6 mb-2">Patient Feedback</span>
+                        <h2 class="fw-bold">Share Your Experience</h2>
+                        <p class="text-muted">Your honest thoughts help us improve and provide better care for children and families.</p>
+                    </div>
+
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <!-- Star Rating Picker -->
+                        <div class="mb-4 text-center p-3 bg-light rounded-3">
+                            <label class="form-label fw-bold d-block mb-2">Overall Rating <span class="text-danger">*</span></label>
+                            <div class="rating-stars d-inline-flex flex-row-reverse justify-content-center gap-1">
+                                <input type="radio" asp-for="RatedStar" value="5" id="star5" class="d-none star-radio" />
+                                <label for="star5" class="star-label fs-2 text-warning cursor-pointer" title="5 stars">★</label>
+
+                                <input type="radio" asp-for="RatedStar" value="4" id="star4" class="d-none star-radio" />
+                                <label for="star4" class="star-label fs-2 text-warning cursor-pointer" title="4 stars">★</label>
+
+                                <input type="radio" asp-for="RatedStar" value="3" id="star3" class="d-none star-radio" />
+                                <label for="star3" class="star-label fs-2 text-warning cursor-pointer" title="3 stars">★</label>
+
+                                <input type="radio" asp-for="RatedStar" value="2" id="star2" class="d-none star-radio" />
+                                <label for="star2" class="star-label fs-2 text-warning cursor-pointer" title="2 stars">★</label>
+
+                                <input type="radio" asp-for="RatedStar" value="1" id="star1" class="d-none star-radio" />
+                                <label for="star1" class="star-label fs-2 text-warning cursor-pointer" title="1 star">★</label>
+                            </div>
+                            <span asp-validation-for="RatedStar" class="text-danger d-block mt-1"></span>
+                        </div>
+
+                        <!-- Service selection -->
+                        <div class="mb-3">
+                            <label asp-for="ServiceId" class="form-label fw-semibold">Service</label>
+                            <select asp-for="ServiceId" class="form-select">
+                                <option value="">-- General Care (Chung cho trung tâm) --</option>
+                                @foreach (var s in Model.AvailableServices)
+                                {
+                                    <option value="@s.Id">@s.Title (@s.SalePrice.ToString("N0") VND)</option>
+                                }
+                            </select>
+                            <span asp-validation-for="ServiceId" class="text-danger"></span>
+                        </div>
+
+                        <!-- Contact Details -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="FullName" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                                <input asp-for="FullName" class="form-control" placeholder="e.g. Nguyen Van An" />
+                                <span asp-validation-for="FullName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Gender" class="form-label fw-semibold">Gender <span class="text-danger">*</span></label>
+                                <select asp-for="Gender" class="form-select" asp-items="Html.GetEnumSelectList<CRUD_ChildrenCare.Models.Enums.Gender>()"></select>
+                                <span asp-validation-for="Gender" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                                <input asp-for="Email" type="email" class="form-control" placeholder="name@example.com" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Mobile" class="form-label fw-semibold">Mobile Number <span class="text-danger">*</span></label>
+                                <input asp-for="Mobile" class="form-control" placeholder="0xxxxxxxxx (10 digits)" />
+                                <span asp-validation-for="Mobile" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Feedback Content -->
+                        <div class="mb-3">
+                            <label asp-for="Content" class="form-label fw-semibold">Feedback Content <span class="text-danger">*</span></label>
+                            <textarea asp-for="Content" class="form-control" rows="5" placeholder="Share your experience with our doctor, nurses, facilities, or customer support (10–1000 characters)..."></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
+                        </div>
+
+                        <!-- Images Upload -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Attach Photos (Optional)</label>
+                            <input type="file" name="Images" class="form-control" multiple accept=".jpg,.jpeg,.png,.webp" />
+                            <small class="text-muted d-block mt-1">Maximum 5 photos. Formats accepted: JPG, PNG, WebP. Up to 2 MB per photo.</small>
+                        </div>
+
+                        <div class="d-flex gap-2 justify-content-end">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-5">Submit Feedback</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .cursor-pointer { cursor: pointer; }
+    .star-radio:checked ~ .star-label {
+        color: #ffc107 !important;
+    }
+    .star-radio:not(:checked) ~ .star-label {
+        color: #dee2e6;
+    }
+    .star-label:hover,
+    .star-label:hover ~ .star-label {
+        color: #ffc107 !important;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

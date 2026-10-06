@@ -1,0 +1,202 @@
+@model CustomerDetailsViewModel
+@{
+    ViewData["Title"] = $"Customer Details - {Model.Customer.FullName}";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1">
+                <li class="breadcrumb-item"><a asp-action="Index">Customers</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.Customer.FullName</li>
+            </ol>
+        </nav>
+        <h2 class="mb-0">@Model.Customer.FullName</h2>
+    </div>
+    <div class="d-flex gap-2">
+        @if (Model.CanManage)
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Customer.Id" class="btn btn-primary">
+                <i class="bi bi-pencil me-1"></i> Edit Customer
+            </a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Customer Info Card -->
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-bottom py-3">
+                <h5 class="card-title fw-bold mb-0">Profile Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <div class="rounded-circle bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center fw-bold fs-3 mb-2" style="width: 80px; height: 80px;">
+                        @(string.IsNullOrWhiteSpace(Model.Customer.FullName) ? "U" : Model.Customer.FullName[0].ToString().ToUpper())
+                    </div>
+                    <h5 class="fw-bold mb-1">@Model.Customer.FullName</h5>
+                    <div>
+                        @if (Model.Customer.Status == ContactStatus.Customer)
+                        {
+                            <span class="badge bg-success fs-6">Customer (Active Booking)</span>
+                        }
+                        else if (Model.Customer.Status == ContactStatus.Potential)
+                        {
+                            <span class="badge bg-warning text-dark fs-6">Potential (Submitted)</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-info text-dark fs-6">Contact (Lead)</span>
+                        }
+                    </div>
+                </div>
+
+                <table class="table table-sm table-borderless">
+                    <tr>
+                        <th class="text-muted w-40">Email:</th>
+                        <td class="fw-semibold">@Model.Customer.Email</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted">Mobile:</th>
+                        <td>@Model.Customer.Mobile</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted">Gender:</th>
+                        <td>@Model.Customer.Gender</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted">Address:</th>
+                        <td>@(string.IsNullOrWhiteSpace(Model.Customer.Address) ? "Not provided" : Model.Customer.Address)</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted">Created:</th>
+                        <td>@Model.Customer.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted">Last Updated:</th>
+                        <td>@Model.Customer.UpdatedDate.ToString("dd/MM/yyyy HH:mm")</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reservations Card -->
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                <h5 class="card-title fw-bold mb-0">Booking & Reservation History</h5>
+                <span class="badge bg-light text-dark border">@Model.Reservations.Count bookings</span>
+            </div>
+            <div class="card-body p-0">
+                @if (!Model.Reservations.Any())
+                {
+                    <div class="p-4 text-center text-muted">
+                        No reservations placed by this email yet.
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Reserved Date</th>
+                                    <th>Service(s)</th>
+                                    <th>Total Cost</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var r in Model.Reservations)
+                                {
+                                    <tr>
+                                        <td>#@r.Id</td>
+                                        <td>@r.ReservedDate.ToString("dd/MM/yyyy")</td>
+                                        <td>
+                                            @if (r.ReservationItems.Any())
+                                            {
+                                                <span>@r.ReservationItems.First().Service?.Title</span>
+                                                @if (r.ReservationItems.Count > 1)
+                                                {
+                                                    <span class="text-muted small">(+@(r.ReservationItems.Count - 1) more)</span>
+                                                }
+                                            }
+                                        </td>
+                                        <td class="fw-semibold">@r.TotalCost.ToString("N0") VND</td>
+                                        <td>
+                                            <span class="badge @(r.Status == ReservationStatus.Success ? "bg-success" : r.Status == ReservationStatus.Submitted ? "bg-warning text-dark" : "bg-secondary")">
+                                                @r.Status
+                                            </span>
+                                        </td>
+                                        <td class="text-end">
+                                            <a asp-controller="AdminReservation" asp-action="Details" asp-route-id="@r.Id" class="btn btn-sm btn-outline-primary">View</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact History (Màn 25 Requirement) -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white border-bottom py-3">
+        <h5 class="card-title fw-bold mb-0">Profile Update History (Contact History)</h5>
+    </div>
+    <div class="card-body p-0">
+        @if (!Model.Histories.Any())
+        {
+            <div class="p-4 text-center text-muted">
+                No history records recorded yet.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Updated Date</th>
+                            <th>Updated By</th>
+                            <th>Full Name</th>
+                            <th>Gender</th>
+                            <th>Mobile</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var h in Model.Histories)
+                        {
+                            <tr>
+                                <td>@h.UpdatedDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>
+                                    @if (h.UpdatedBy != null)
+                                    {
+                                        <span class="badge bg-secondary">@h.UpdatedBy.FullName</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-light text-muted border">System / Booking Sync</span>
+                                    }
+                                </td>
+                                <td>@h.FullName</td>
+                                <td>@h.Gender</td>
+                                <td>@h.Mobile</td>
+                                <td>@(string.IsNullOrWhiteSpace(h.Address) ? "-" : h.Address)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
