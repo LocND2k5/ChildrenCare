@@ -26,8 +26,8 @@ public sealed class DatabaseSeeder(
         await SeedSampleServicesAsync(cancellationToken);
         await SeedPart5DataAsync(cancellationToken);
 
-        // Auto-promote shinichi2542003@gmail.com and kkk@gmail.com
-        var emailsToPromote = new[] { "shinichi2542003@gmail.com", "kkk@gmail.com" };
+        // Auto-promote shinichi2542003@gmail.com and admin@gmail.com
+        var emailsToPromote = new[] { "shinichi2542003@gmail.com", "admin@gmail.com" };
         foreach (var email in emailsToPromote)
         {
             var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);

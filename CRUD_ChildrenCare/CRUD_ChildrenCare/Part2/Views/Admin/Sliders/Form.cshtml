@@ -1,0 +1,77 @@
+@model SliderFormViewModel
+@* [PART 2 - VIEW LAYER - ADMIN - Sliders/Form.cshtml (dùng cho cả Create & Edit)] *@
+
+@{
+    bool isEdit = Model.Id > 0;
+    ViewData["Title"] = isEdit ? "Chỉnh sửa Slider" : "Thêm Slider mới";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h2 class="mb-4">@ViewData["Title"]</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="@(isEdit ? "Edit" : "Create")" method="post">
+                        @Html.AntiForgeryToken()
+                        @if (isEdit)
+                        {
+                            <input type="hidden" asp-for="Id" />
+                        }
+
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-bold"></label>
+                            <input asp-for="Title" class="form-control" placeholder="Tiêu đề slider">
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-bold"></label>
+                            <textarea asp-for="Description" class="form-control" rows="2"
+                                      placeholder="Mô tả ngắn (không bắt buộc)"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label fw-bold"></label>
+                            <input asp-for="ImageUrl" class="form-control"
+                                   placeholder="https://example.com/banner.jpg">
+                            <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <img src="@Model.ImageUrl" class="img-fluid mt-2 rounded"
+                                     style="max-height:150px" alt="Preview">
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LinkUrl" class="form-label fw-bold"></label>
+                            <input asp-for="LinkUrl" class="form-control"
+                                   placeholder="https://example.com/trang-dich (không bắt buộc)">
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="DisplayOrder" class="form-label fw-bold"></label>
+                                <input asp-for="DisplayOrder" class="form-control" type="number" min="0">
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Status" class="form-label fw-bold"></label>
+                                <select asp-for="Status" class="form-select"
+                                        asp-items="Html.GetEnumSelectList<SliderStatus>()"></select>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary px-4">
+                                @(isEdit ? "Cập nhật" : "Thêm Slider")
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

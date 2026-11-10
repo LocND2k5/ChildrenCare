@@ -1,0 +1,109 @@
+@model PostListViewModel
+@* [PART 2 - VIEW LAYER - ADMIN - Posts/Index.cshtml] *@
+
+@{
+    ViewData["Title"] = "Quản lý bài viết";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Quản lý bài viết</h2>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Tạo bài viết mới
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- FILTER FORM -->
+    <form asp-action="Index" method="get" class="row g-2 mb-4">
+        <div class="col-md-6">
+            <input type="text" name="search" value="@Model.SearchKeyword"
+                   class="form-control" placeholder="Tìm kiếm tiêu đề...">
+        </div>
+        <div class="col-md-3">
+            <select name="status" class="form-select">
+                <option value="">-- Tất cả trạng thái --</option>
+                <option value="0" selected="@(Model.FilterStatus == PostStatus.Draft)">Bản nháp</option>
+                <option value="1" selected="@(Model.FilterStatus == PostStatus.Published)">Đã xuất bản</option>
+                <option value="2" selected="@(Model.FilterStatus == PostStatus.Archived)">Lưu trữ</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-outline-primary">Lọc</button>
+            <a asp-action="Index" class="btn btn-outline-secondary ms-1">Reset</a>
+        </div>
+    </form>
+
+    <!-- TABLE -->
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Tiêu đề</th>
+                    <th>Nổi bật</th>
+                    <th>Trạng thái</th>
+                    <th>Ngày tạo</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Posts.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted">Chưa có bài viết nào.</td></tr>
+                }
+                @foreach (var post in Model.Posts)
+                {
+                    <tr>
+                        <td>@post.Id</td>
+                        <td>
+                            <strong>@post.Title</strong>
+                            <br><small class="text-muted">@post.Summary.Substring(0, Math.Min(60, post.Summary.Length))...</small>
+                        </td>
+                        <td>
+                            @if (post.IsFeatured)
+                            {
+                                <span class="badge bg-warning text-dark">⭐ Nổi bật</span>
+                            }
+                        </td>
+                        <td>
+                            @switch (post.Status)
+                            {
+                                case PostStatus.Published:
+                                    <span class="badge bg-success">Đã xuất bản</span>
+                                    break;
+                                case PostStatus.Draft:
+                                    <span class="badge bg-secondary">Bản nháp</span>
+                                    break;
+                                case PostStatus.Archived:
+                                    <span class="badge bg-dark">Lưu trữ</span>
+                                    break;
+                            }
+                        </td>
+                        <td>@post.CreatedAt.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@post.Id"
+                               class="btn btn-sm btn-outline-warning">Sửa</a>
+
+                            <form asp-action="ToggleStatus" asp-route-id="@post.Id"
+                                  method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-primary">
+                                    @(post.Status == PostStatus.Published ? "Ẩn" : "Hiện")
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

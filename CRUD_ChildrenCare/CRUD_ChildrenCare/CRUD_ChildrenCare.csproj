@@ -16,4 +16,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.31" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Part2\**" />
+    <Content Remove="Part2\**" />
+    <EmbeddedResource Remove="Part2\**" />
+    <None Include="Part2\**" />
+  </ItemGroup>
+
 </Project>

@@ -60,8 +60,11 @@ public sealed class SlidersController(ApplicationDbContext dbContext) : Controll
             Status = model.Status, Notes = model.Notes
         };
 
+        slider.CreatedDate = DateTime.UtcNow;
+        slider.UpdatedDate = DateTime.UtcNow;
         dbContext.Sliders.Add(slider);
         await dbContext.SaveChangesAsync();
+        TempData["Success"] = "Thêm mới slider thành công!";
         return RedirectToAction(nameof(Index));
     }
 
@@ -89,8 +92,10 @@ public sealed class SlidersController(ApplicationDbContext dbContext) : Controll
 
         slider.Title = model.Title; slider.ImageUrl = model.ImageUrl; slider.BackLink = model.BackLink;
         slider.Status = model.Status; slider.Notes = model.Notes;
+        slider.UpdatedDate = DateTime.UtcNow;
 
         await dbContext.SaveChangesAsync();
+        TempData["Success"] = "Cập nhật slider thành công!";
         return RedirectToAction(nameof(Index));
     }
 
@@ -101,7 +106,9 @@ public sealed class SlidersController(ApplicationDbContext dbContext) : Controll
         var slider = await dbContext.Sliders.FindAsync(id);
         if (slider == null) return NotFound();
         slider.Status = slider.Status == SliderStatus.Active ? SliderStatus.Inactive : SliderStatus.Active;
+        slider.UpdatedDate = DateTime.UtcNow;
         await dbContext.SaveChangesAsync();
+        TempData["Success"] = $"Đã {(slider.Status == SliderStatus.Active ? "kích hoạt" : "tắt")} slider thành công!";
         return RedirectToAction(nameof(Index));
     }
 }

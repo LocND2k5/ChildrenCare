@@ -85,8 +85,11 @@ public sealed class PostsController(ApplicationDbContext dbContext) : Controller
             Status = model.Status, AuthorId = userId
         };
 
+        post.CreatedDate = DateTime.UtcNow;
+        post.UpdatedDate = DateTime.UtcNow;
         dbContext.Posts.Add(post);
         await dbContext.SaveChangesAsync();
+        TempData["Success"] = "Tạo bài viết mới thành công!";
         return RedirectToAction(nameof(Index));
     }
 
@@ -120,8 +123,10 @@ public sealed class PostsController(ApplicationDbContext dbContext) : Controller
         post.Title = model.Title; post.Thumbnail = model.Thumbnail; post.CategoryId = model.CategoryId;
         post.BriefInfo = model.BriefInfo; post.Description = model.Description; post.IsFeatured = model.IsFeatured;
         post.Status = model.Status;
+        post.UpdatedDate = DateTime.UtcNow;
 
         await dbContext.SaveChangesAsync();
+        TempData["Success"] = "Cập nhật bài viết thành công!";
         return RedirectToAction(nameof(Index));
     }
 
@@ -132,7 +137,9 @@ public sealed class PostsController(ApplicationDbContext dbContext) : Controller
         var post = await dbContext.Posts.FindAsync(id);
         if (post == null) return NotFound();
         post.Status = post.Status == PostStatus.Published ? PostStatus.Hidden : PostStatus.Published;
+        post.UpdatedDate = DateTime.UtcNow;
         await dbContext.SaveChangesAsync();
+        TempData["Success"] = $"Đã {(post.Status == PostStatus.Published ? "hiển thị" : "ẩn")} bài viết thành công!";
         return RedirectToAction(nameof(Index));
     }
 }

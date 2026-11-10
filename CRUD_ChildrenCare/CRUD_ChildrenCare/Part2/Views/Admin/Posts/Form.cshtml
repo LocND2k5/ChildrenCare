@@ -1,0 +1,77 @@
+@model PostFormViewModel
+@* [PART 2 - VIEW LAYER - ADMIN - Posts/Create.cshtml & Edit.cshtml dùng chung partial] *@
+
+@{
+    bool isEdit = Model.Id > 0;
+    ViewData["Title"] = isEdit ? "Chỉnh sửa bài viết" : "Tạo bài viết mới";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <h2 class="mb-4">@ViewData["Title"]</h2>
+
+    <form asp-action="@(isEdit ? "Edit" : "Create")" method="post">
+        @Html.AntiForgeryToken()
+        @if (isEdit)
+        {
+            <input type="hidden" asp-for="Id" />
+        }
+
+        <div class="row g-4">
+            <!-- CỘT TRÁI -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-bold"></label>
+                            <input asp-for="Title" class="form-control" placeholder="Nhập tiêu đề bài viết">
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Summary" class="form-label fw-bold"></label>
+                            <textarea asp-for="Summary" class="form-control" rows="3"
+                                      placeholder="Tóm tắt ngắn gọn bài viết"></textarea>
+                            <span asp-validation-for="Summary" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Content" class="form-label fw-bold"></label>
+                            <textarea asp-for="Content" class="form-control" rows="12"
+                                      placeholder="Nội dung bài viết (hỗ trợ HTML)"></textarea>
+                            <span asp-validation-for="Content" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI -->
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-header fw-bold">Cài đặt</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="Status" class="form-label fw-bold"></label>
+                            <select asp-for="Status" class="form-select"
+                                    asp-items="Html.GetEnumSelectList<PostStatus>()"></select>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input asp-for="IsFeatured" class="form-check-input" type="checkbox">
+                            <label asp-for="IsFeatured" class="form-check-label">Đánh dấu nổi bật</label>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="ThumbnailUrl" class="form-label fw-bold"></label>
+                            <input asp-for="ThumbnailUrl" class="form-control"
+                                   placeholder="https://example.com/image.jpg">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        @(isEdit ? "Cập nhật" : "Tạo bài viết")
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

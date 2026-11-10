@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="arch_diagram_part2" name="Architecture Part 2">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ApplicationDbContext (Center) -->
+        <mxCell id="DbContext" value="&lt;b&gt;ApplicationDbContext&lt;/b&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="400" y="300" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="DbContext_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="DbContext">
+          <mxGeometry y="30" width="220" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="DbContext_attr" value="• Posts: DbSet&amp;lt;Post&amp;gt;&lt;br&gt;• Sliders: DbSet&amp;lt;Slider&amp;gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="DbContext">
+          <mxGeometry y="38" width="220" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="DbContext_sep2" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="DbContext">
+          <mxGeometry y="72" width="220" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="DbContext_methods" value="• SaveChangesAsync()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="DbContext">
+          <mxGeometry y="80" width="220" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- PostsController -->
+        <mxCell id="PostsCtrl" value="&lt;b&gt;PostsController&lt;/b&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="100" y="80" width="200" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="PostsCtrl_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="PostsCtrl">
+          <mxGeometry y="30" width="200" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="PostsCtrl_attr" value="• _context: ApplicationDbContext" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PostsCtrl">
+          <mxGeometry y="38" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="PostsCtrl_sep2" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="PostsCtrl">
+          <mxGeometry y="58" width="200" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="PostsCtrl_methods" value="• Index()&lt;br&gt;• Create(Post)&lt;br&gt;• Edit(id, Post)&lt;br&gt;• ToggleStatus(id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PostsCtrl">
+          <mxGeometry y="66" width="200" height="64" as="geometry" />
+        </mxCell>
+
+        <!-- SlidersController -->
+        <mxCell id="SlidersCtrl" value="&lt;b&gt;SlidersController&lt;/b&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="410" y="80" width="200" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="SlidersCtrl_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="SlidersCtrl">
+          <mxGeometry y="30" width="200" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="SlidersCtrl_attr" value="• _context: ApplicationDbContext" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="SlidersCtrl">
+          <mxGeometry y="38" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="SlidersCtrl_sep2" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="SlidersCtrl">
+          <mxGeometry y="58" width="200" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="SlidersCtrl_methods" value="• Index()&lt;br&gt;• Create(Slider)&lt;br&gt;• Edit(id, Slider)&lt;br&gt;• ToggleStatus(id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="SlidersCtrl">
+          <mxGeometry y="66" width="200" height="64" as="geometry" />
+        </mxCell>
+
+        <!-- BlogsController -->
+        <mxCell id="BlogsCtrl" value="&lt;b&gt;BlogsController&lt;/b&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="720" y="80" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="BlogsCtrl_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="BlogsCtrl">
+          <mxGeometry y="30" width="200" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="BlogsCtrl_attr" value="• _context: ApplicationDbContext" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="BlogsCtrl">
+          <mxGeometry y="38" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="BlogsCtrl_sep2" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="BlogsCtrl">
+          <mxGeometry y="58" width="200" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="BlogsCtrl_methods" value="• Index(search)&lt;br&gt;• Details(id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="BlogsCtrl">
+          <mxGeometry y="66" width="200" height="34" as="geometry" />
+        </mxCell>
+
+        <!-- Post Model -->
+        <mxCell id="Post" value="&lt;b&gt;Post.model&lt;/b&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="100" y="280" width="180" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="Post_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="Post">
+          <mxGeometry y="30" width="180" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="Post_attr" value="• id: int&lt;br&gt;• title: string&lt;br&gt;• content: string&lt;br&gt;• excerpt: string&lt;br&gt;• thumbnailUrl: string&lt;br&gt;• isFeatured: boolean&lt;br&gt;• createdDate: DateTime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Post">
+          <mxGeometry y="38" width="180" height="112" as="geometry" />
+        </mxCell>
+
+        <!-- Slider Model -->
+        <mxCell id="Slider" value="&lt;b&gt;Slider.model&lt;/b&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="720" y="280" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Slider_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="Slider">
+          <mxGeometry y="30" width="180" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="Slider_attr" value="• id: int&lt;br&gt;• title: string&lt;br&gt;• imageUrl: string&lt;br&gt;• backLink: string&lt;br&gt;• notes: string" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Slider">
+          <mxGeometry y="38" width="180" height="82" as="geometry" />
+        </mxCell>
+
+        <!-- PostStatus Enum -->
+        <mxCell id="PostStatus" value="&lt;b&gt;PostStatus.enum&lt;/b&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="280" y="520" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="PostStatus_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="PostStatus">
+          <mxGeometry y="30" width="150" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="PostStatus_attr" value="• SHOW&lt;br&gt;• HIDE" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="PostStatus">
+          <mxGeometry y="38" width="150" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- SliderStatus Enum -->
+        <mxCell id="SliderStatus" value="&lt;b&gt;SliderStatus.enum&lt;/b&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="580" y="520" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="SliderStatus_sep1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="SliderStatus">
+          <mxGeometry y="30" width="150" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="SliderStatus_attr" value="• ACTIVE&lt;br&gt;• INACTIVE" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="SliderStatus">
+          <mxGeometry y="38" width="150" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Connectors -->
+        <!-- PostsController -> DbContext -->
+        <mxCell id="edge1" value="calls" style="endArrow=classic;html=1;exitX=0.5;exitY=1;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#000000;" edge="1" parent="1" source="PostsCtrl" target="DbContext">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- SlidersController -> DbContext -->
+        <mxCell id="edge2" value="calls" style="endArrow=classic;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#000000;" edge="1" parent="1" source="SlidersCtrl" target="DbContext">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- BlogsController -> DbContext -->
+        <mxCell id="edge3" value="calls" style="endArrow=classic;html=1;exitX=0.5;exitY=1;entryX=1;entryY=0.5;edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#000000;" edge="1" parent="1" source="BlogsCtrl" target="DbContext">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- DbContext -> Post -->
+        <mxCell id="edge4" value="queries" style="endArrow=classic;html=1;exitX=0;exitY=0.75;entryX=1;entryY=0.5;edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#000000;" edge="1" parent="1" source="DbContext" target="Post">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- DbContext -> Slider -->
+        <mxCell id="edge5" value="queries" style="endArrow=classic;html=1;exitX=1;exitY=0.75;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#000000;" edge="1" parent="1" source="DbContext" target="Slider">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Post -> PostStatus -->
+        <mxCell id="edge6" value="&amp;lt;&amp;lt;use&amp;gt;&amp;gt;" style="endArrow=classic;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#000000;" edge="1" parent="1" source="Post" target="PostStatus">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Slider -> SliderStatus -->
+        <mxCell id="edge7" value="&amp;lt;&amp;lt;use&amp;gt;&amp;gt;" style="endArrow=classic;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#000000;" edge="1" parent="1" source="Slider" target="SliderStatus">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

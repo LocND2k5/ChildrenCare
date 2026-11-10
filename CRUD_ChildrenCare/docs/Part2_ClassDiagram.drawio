@@ -1,0 +1,116 @@
+<mxfile host="Electron" agent="Mozilla/5.0">
+  <diagram id="diagram_1" name="Page-1">
+    <mxGraphModel dx="1241" dy="764" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="c_posts" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="PostsController" vertex="1">
+          <mxGeometry height="154" width="220" x="149" y="34" as="geometry" />
+        </mxCell>
+        <mxCell id="c_posts_f" parent="c_posts" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- _context: ApplicationDbContext" vertex="1">
+          <mxGeometry height="24" width="220" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="c_posts_l" parent="c_posts" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="220" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="c_posts_m" parent="c_posts" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ Index()&lt;br/&gt;+ Create()&lt;br/&gt;+ Create(post: Post)&lt;br/&gt;+ Edit(id: int)&lt;br/&gt;+ Edit(id: int, post: Post)&lt;br/&gt;+ ToggleStatus(id: int)" vertex="1">
+          <mxGeometry height="96" width="220" y="58" as="geometry" />
+        </mxCell>
+        <mxCell id="c_sliders" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="SlidersController" vertex="1">
+          <mxGeometry height="154" width="220" x="729" y="34" as="geometry" />
+        </mxCell>
+        <mxCell id="c_sliders_f" parent="c_sliders" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- _context: ApplicationDbContext" vertex="1">
+          <mxGeometry height="24" width="220" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="c_sliders_l" parent="c_sliders" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="220" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="c_sliders_m" parent="c_sliders" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ Index()&lt;br/&gt;+ Create()&lt;br/&gt;+ Create(slider: Slider)&lt;br/&gt;+ Edit(id: int)&lt;br/&gt;+ Edit(id: int, slider: Slider)&lt;br/&gt;+ ToggleStatus(id: int)" vertex="1">
+          <mxGeometry height="96" width="220" y="58" as="geometry" />
+        </mxCell>
+        <mxCell id="c_context" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="ApplicationDbContext" vertex="1">
+          <mxGeometry height="96" width="220" x="449" y="294" as="geometry" />
+        </mxCell>
+        <mxCell id="c_context_f" parent="c_context" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ Posts: DbSet&lt;Post&gt;&lt;br/&gt;+ Sliders: DbSet&lt;Slider&gt;" vertex="1">
+          <mxGeometry height="38" width="220" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="c_context_l" parent="c_context" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="220" y="64" as="geometry" />
+        </mxCell>
+        <mxCell id="c_context_m" parent="c_context" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ SaveChangesAsync()" vertex="1">
+          <mxGeometry height="24" width="220" y="72" as="geometry" />
+        </mxCell>
+        <mxCell id="c_post" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Post" vertex="1">
+          <mxGeometry height="176" width="220" x="49" y="254" as="geometry" />
+        </mxCell>
+        <mxCell id="c_post_f" parent="c_post" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ Id: int&lt;br/&gt;+ Title: string&lt;br/&gt;+ Content: string&lt;br/&gt;+ ThumbnailUrl: string&lt;br/&gt;+ CategoryId: int?&lt;br/&gt;+ AuthorId: int?&lt;br/&gt;+ IsFeatured: bool&lt;br/&gt;+ Status: PostStatus&lt;br/&gt;+ CreatedDate: DateTime&lt;br/&gt;+ UpdatedDate: DateTime?" vertex="1">
+          <mxGeometry height="150" width="220" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="c_slider" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Slider" vertex="1">
+          <mxGeometry height="148" width="220" x="849" y="268" as="geometry" />
+        </mxCell>
+        <mxCell id="c_slider_f" parent="c_slider" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ Id: int&lt;br/&gt;+ Title: string&lt;br/&gt;+ ImageUrl: string&lt;br/&gt;+ BackLink: string&lt;br/&gt;+ Notes: string&lt;br/&gt;+ Status: SliderStatus&lt;br/&gt;+ CreatedDate: DateTime&lt;br/&gt;+ UpdatedDate: DateTime?" vertex="1">
+          <mxGeometry height="122" width="220" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="c_poststatus" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;i&gt;«enumeration»&lt;/i&gt;&lt;br/&gt;PostStatus" vertex="1">
+          <mxGeometry height="78" width="150" x="84" y="594" as="geometry" />
+        </mxCell>
+        <mxCell id="c_poststatus_f" parent="c_poststatus" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ Hide: int = 0&lt;br/&gt;+ Show: int = 1" vertex="1">
+          <mxGeometry height="38" width="150" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="c_sliderstatus" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;i&gt;«enumeration»&lt;/i&gt;&lt;br/&gt;SliderStatus" vertex="1">
+          <mxGeometry height="78" width="150" x="884" y="594" as="geometry" />
+        </mxCell>
+        <mxCell id="c_sliderstatus_f" parent="c_sliderstatus" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ Inactive: int = 0&lt;br/&gt;+ Active: int = 1" vertex="1">
+          <mxGeometry height="38" width="150" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="c_context" style="endArrow=classic;html=1;dashed=1;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" target="c_post" value="queries">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="c_context" style="endArrow=classic;html=1;dashed=1;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="c_slider" value="queries">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fUbMlD6BVoAdiTY9hbLh-2" edge="1" parent="1" source="c_post_f" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;edgeStyle=sequenceEdgeStyle;libavoidRouting=0;curved=0;rounded=0;" target="c_poststatus" value="&amp;lt;&amp;lt;use&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="159" y="430" />
+            </Array>
+            <mxPoint x="219" y="464" as="sourcePoint" />
+            <mxPoint x="99" y="458" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fUbMlD6BVoAdiTY9hbLh-3" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;edgeStyle=sequenceEdgeStyle;libavoidRouting=0;curved=0;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="c_sliderstatus" value="&amp;lt;&amp;lt;use&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" x="-0.0787" as="geometry">
+            <Array as="points">
+              <mxPoint x="958.75" y="416" />
+            </Array>
+            <mxPoint x="958.5" y="416" as="sourcePoint" />
+            <mxPoint x="958.5" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fUbMlD6BVoAdiTY9hbLh-4" edge="1" parent="1" source="c_context" style="endArrow=classic;html=1;rounded=0;exitX=0.25;exitY=0;exitDx=0;exitDy=0;dashed=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="319" y="234" as="sourcePoint" />
+            <mxPoint x="369" y="184" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fUbMlD6BVoAdiTY9hbLh-5" connectable="0" parent="fUbMlD6BVoAdiTY9hbLh-4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="calls" vertex="1">
+          <mxGeometry relative="1" x="0.1017" y="-3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fUbMlD6BVoAdiTY9hbLh-6" edge="1" parent="1" source="c_context" style="endArrow=classic;html=1;rounded=0;exitX=0.75;exitY=0;exitDx=0;exitDy=0;dashed=1;entryX=-0.017;entryY=1.024;entryDx=0;entryDy=0;entryPerimeter=0;" target="c_sliders_m" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="644" y="298" as="sourcePoint" />
+            <mxPoint x="509" y="188" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fUbMlD6BVoAdiTY9hbLh-7" connectable="0" parent="fUbMlD6BVoAdiTY9hbLh-6" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="calls" vertex="1">
+          <mxGeometry relative="1" x="0.1017" y="-3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
